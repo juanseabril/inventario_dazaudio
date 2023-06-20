@@ -27,11 +27,10 @@ const Nav = () => {
                 <Image 
                     src="/assets/images/logosinfondo.svg"
                     alt="Dazaudio Logo"
-                    width={81}
-                    height={54}
+                    width={216}
+                    height={36}
                     className="object-contain"
                 />
-                <p className="logo_text mt-4">Dazaudio</p>
             </Link>
 
             {/* Desktop Navigation */}
@@ -39,7 +38,7 @@ const Nav = () => {
                 {session?.user ? (
                     <div className="flex gap-3 md:gap-5">
                         <Link href="/create-item" className="black_btn">
-                            Crear Mercancía
+                            Crear Producto
                         </Link>
 
                         <button type="button" onClick={signOut} className="outline_btn">
@@ -99,7 +98,7 @@ const Nav = () => {
                                     className="dropdown_link"
                                     onClick={() => setToggleDropdown(false)}
                                 >
-                                    Crear Mercancía
+                                    Crear Producto
                                 </Link>
                                 <button
                                     type="button"
