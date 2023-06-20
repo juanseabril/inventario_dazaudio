@@ -5,7 +5,6 @@ export const POST = async (req) => {
     const { userId, name, category, buy, sell, stock, details } = await req.json();
 
     try {
-        console.log("DBBBB!")
         await connectToDB();
         const newItem = new Item({
             creator: userId,
