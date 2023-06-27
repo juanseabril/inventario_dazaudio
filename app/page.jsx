@@ -11,7 +11,6 @@ const Home = () => {
             donde podrás gestionar de manera eficiente y precisa todos 
             los productos y existencias. 
         </p>
-
         <Feed />
         </section>
     )

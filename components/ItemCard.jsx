@@ -6,6 +6,10 @@ import { useSession } from 'next-auth/react';
 import { usePathname, useRouter } from 'next/navigation';
 
 const ItemCard = ({ item, handleCategoryClick, handleEdit, handleDelete }) => {
+    const { data: session } = useSession();
+    const pathName = usePathname();
+    const router = useRouter();
+
     const [copied, setCopied] = useState("");
 
     const handleCopy = () => {
@@ -16,7 +20,37 @@ const ItemCard = ({ item, handleCategoryClick, handleEdit, handleDelete }) => {
 
     return (
         <div className="prompt_card">
-            <div className="flex justify-between items-start gap-5">
+            <div className="flex justify-between items-center gap-3">
+                <div>
+                    <p className="font-satoshi text-xl text-black font-bold">
+                        {item.name}
+                    </p>
+                    <p 
+                        className="font-inter text-sm orange_gradient cursor-pointer"
+                        onClick={() => handleCategoryClick && handleCategoryClick(item.category)}
+                    >
+                        {item.category}
+                    </p>
+                </div>
+                <div className="flex items-center flex-col">
+                    <span className="font-satoshi text-base text-black font-bold">{item.stock}</span>
+                    <span className="font-inter text-sm orange_gradient">Unidades</span>
+                </div>
+            </div>
+            <div className="pt-2 border-t border-gray-300 flex-grow"></div>
+            <p className="pt-4 font-satoshi text-lg blue_gradient font-bold text-center">
+                Se compró en: {item.buy}
+            </p>
+            <p className="pt-1 pb-4 font-satoshi text-2xl orange_gradient font-bold text-center">
+                Se vende en: {item.sell}
+            </p>
+            <div className="py-3 border-t border-gray-300 flex-grow">
+                <p className="text-justify">
+                    {item.details}
+                </p>
+            </div>                
+            <div className="border-t border-gray-300 flex-grow"></div>
+            <div className="pt-3 pb-2 flex justify-between items-center gap-5">
                 <div className="flex-1 flex justify-start items-center gap-3 cursor-pointer">
                     <Image
                         src={item.creator.image}
@@ -26,7 +60,7 @@ const ItemCard = ({ item, handleCategoryClick, handleEdit, handleDelete }) => {
                         className="rounded-full object-contain"    
                     />
                     <div className="flex flex-col">
-                        <h3 className="font-satoshi font-semibold text-gray-900">
+                        <h3 className="font-satoshi font-semibold text-gray-500 text-sm">
                             {item.creator.username}
                         </h3>
                         <p className="font-inter text-sm text-gray-500">
@@ -45,15 +79,23 @@ const ItemCard = ({ item, handleCategoryClick, handleEdit, handleDelete }) => {
                     />
                 </div>
             </div>
-            <p classname="my-4 font-satoshi text-sm text-gray-700">
-                {item.name}
-            </p>
-            <p 
-                className="font-inter text-sm blue_gradient cursor-pointer"
-                onClick={() => handleCategoryClick && handleCategoryClick(item.category)}
-            >
-                {item.category}
-            </p>
+            
+            {session?.user.id === item.creator._id && pathName === "/profile" && (
+                <div className='flex-center gap-4 border-t border-gray-300 pt-4'>
+                <p
+                    className='font-inter text-sm green_gradient cursor-pointer'
+                    onClick={handleEdit}
+                >
+                    Editar
+                </p>
+                <p
+                    className='font-inter text-sm orange_gradient cursor-pointer'
+                    onClick={handleDelete}
+                >
+                    Eliminar
+                </p>
+                </div>
+            )}
         </div>
     )
 }

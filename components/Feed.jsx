@@ -6,7 +6,7 @@ import ItemCard from './ItemCard';
 
 const ItemCardList = ({ data, handleCategoryClick }) => {
     return (
-        <div className="mt-16 prompt_layout">
+        <div className="mt-3 prompt_layout">
             {data.map((item) => (
                 <ItemCard
                     key = {item._id}
@@ -19,7 +19,7 @@ const ItemCardList = ({ data, handleCategoryClick }) => {
 }
 
 const Feed = () => {
-    const [searchText,setSearchText] = useState('');
+    const [searchText, setSearchText] = useState('');
     const [items, setItems] = useState([]);
 
     const handleSearchChange = (e) => {
