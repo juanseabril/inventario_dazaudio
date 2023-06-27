@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import Profile from '@components/Profile';
 
 const MyProfile = () => {
+    const router = useRouter();
     const { data: session } = useSession(); 
 
     const [items, setItems] = useState([]);
@@ -22,12 +23,27 @@ const MyProfile = () => {
         if(session?.user.id) fetchItems();
     }, []);
 
-    const handleEdit = () => {
-
+    const handleEdit = (item) => {
+        router.push(`/update-item?id=${item._id}`);
     }
 
-    const handleDelete = async () => {
+    const handleDelete = async (item) => {
+        const hasConfirmed = confirm("¿Estas seguro que deseas eliminar este item?");
         
+        if(hasConfirmed) {
+            try {
+                await fetch(`/api/item/${item._id.toString()}`, {
+                    method: 'DELETE'
+                })
+
+                const filteredItems = items.filter((p) => p._id !== item._id)
+
+                setItems(filteredItems);
+
+            } catch (error) {
+                console.log(error);
+            }
+        }
     }
 
     return (
