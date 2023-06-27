@@ -38,8 +38,6 @@ const CreateItem = () => {
                 })
             })
 
-            console.log("response.ok", response.ok);
-
             if (response.ok){
                 router.push("/");
             }

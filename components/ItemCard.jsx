@@ -5,12 +5,18 @@ import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { usePathname, useRouter } from 'next/navigation';
 
-const ItemCard = ({ item, handleCategoryClick, handleEdit, handleDelete }) => {
+const ItemCard = ({ item, handleEdit, handleDelete }) => {
     const { data: session } = useSession();
     const pathName = usePathname();
     const router = useRouter();
 
     const [copied, setCopied] = useState("");
+
+    const handleProfileClick = () => {    
+        if (item.creator._id === session?.user.id) return router.push("/profile");
+    
+        router.push(`/profile/${item.creator._id}?name=${item.creator.username}`);
+      };
 
     const handleCopy = () => {
         setCopied(item.name);
@@ -26,9 +32,7 @@ const ItemCard = ({ item, handleCategoryClick, handleEdit, handleDelete }) => {
                         {item.name}
                     </p>
                     <p 
-                        className="font-inter text-sm orange_gradient cursor-pointer"
-                        onClick={() => handleCategoryClick && handleCategoryClick(item.category)}
-                    >
+                        className="font-inter text-sm orange_gradient">
                         {item.category}
                     </p>
                 </div>
@@ -51,7 +55,10 @@ const ItemCard = ({ item, handleCategoryClick, handleEdit, handleDelete }) => {
             </div>                
             <div className="border-t border-gray-300 flex-grow"></div>
             <div className="pt-3 pb-2 flex justify-between items-center gap-5">
-                <div className="flex-1 flex justify-start items-center gap-3 cursor-pointer">
+                <div 
+                    className="flex-1 flex justify-start items-center gap-3 cursor-pointer"
+                    onClick={handleProfileClick}
+                >
                     <Image
                         src={item.creator.image}
                         alt="user_image"

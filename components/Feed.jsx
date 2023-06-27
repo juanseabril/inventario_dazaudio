@@ -4,14 +4,13 @@ import { useState, useEffect } from 'react';
 
 import ItemCard from './ItemCard';
 
-const ItemCardList = ({ data, handleCategoryClick }) => {
+const ItemCardList = ({ data }) => {    
     return (
         <div className="mt-3 prompt_layout">
             {data.map((item) => (
                 <ItemCard
                     key = {item._id}
                     item = {item}
-                    handleCategoryClick = {handleCategoryClick}
                 />
             ))}
         </div>
@@ -19,23 +18,49 @@ const ItemCardList = ({ data, handleCategoryClick }) => {
 }
 
 const Feed = () => {
-    const [searchText, setSearchText] = useState('');
-    const [items, setItems] = useState([]);
+    const [allItems, setAllItems] = useState([]);
 
-    const handleSearchChange = (e) => {
+    const [searchText, setSearchText] = useState("");
+    const [searchTimeout, setSearchTimeout] = useState(null);
+    const [searchedResults, setSearchedResults] = useState([]);
+        
+    const fetchItems = async () => {
+        const response = await fetch ("api/item");
+        const data = await response.json();
 
+        setAllItems(data);
     }
-
+    
     useEffect(() => {
-        const fetchItems = async () => {
-            const response = await fetch ('api/item');
-            const data = await response.json();
-
-            setItems(data);
-        }
-
         fetchItems();
     }, []);
+
+    const filterItems = (searchtext) => {
+        const regex = new RegExp(searchtext, "i");
+
+        return allItems.filter(
+            (item) =>
+                regex.test(item.creator.username) ||
+                regex.test(item.name) ||
+                regex.test(item.category) ||
+                regex.test(item.buy) ||
+                regex.test(item.sell) ||
+                regex.test(item.stock) ||
+                regex.test(item.details)
+        );
+    }
+
+    const handleSearchChange = (e) => {
+        clearTimeout(searchTimeout);
+        setSearchText(e.target.value);
+
+        setSearchTimeout(
+            setTimeout(() => {
+                const searchResult = filterItems(e.target.value);
+                setSearchedResults(searchResult);
+            }, 500)
+        );
+    }
 
     return (
         <section className="feed">
@@ -50,12 +75,17 @@ const Feed = () => {
                 />
             </form>
 
-            <ItemCardList
-                data={items}
-                handleCategoryClick={() => {}}
-            />
+            {searchText ? (
+                <ItemCardList
+                    data={searchedResults}
+                />
+            ) : (
+                <ItemCardList 
+                    data={allItems}
+                />
+            )}
         </section>
-    )
-}
+    );
+};
 
-export default Feed
+export default Feed;
